@@ -1,0 +1,1 @@
+The Kazakh Question Answering app answers questions based on Kazakh text contexts. It uses a fine-tuned BERT model from Hugging Face Transformers for efficient, accurate responses. BERT's bidirectional context understanding ensures high accuracy in answering questions.
