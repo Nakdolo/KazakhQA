@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kazakh Question Answering Web App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            document.querySelectorAll('.container, textarea, button, h2, p, a').forEach(el => el.classList.toggle('dark-mode'));
+            localStorage.setItem('dark-mode', isDarkMode);
+        }
+
+        function highlightAnswer() {
+            const contextElement = document.getElementById('context-display');
+            const context = contextElement.innerHTML;
+            const answer = "{{ answer }}";
+
+            console.log('Context:', context);
+            console.log('Answer:', answer);
+
+            if (answer && context.includes(answer)) {
+                const regex = new RegExp(`(${answer})`, 'gi');
+                const highlightedContext = context.replace(regex, `<span class="highlight">$1</span>`);
+                contextElement.innerHTML = highlightedContext;
+                console.log('Highlighted Context:', highlightedContext);
+            } else {
+                contextElement.innerHTML = context;
+            }
+        }
+
+        function loadDarkMode() {
+            const isDarkMode = localStorage.getItem('dark-mode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.querySelectorAll('.container, textarea, button, h2, p, a').forEach(el => el.classList.add('dark-mode'));
+            }
+        }
+
+        window.onload = function() {
+            loadDarkMode();
+            highlightAnswer();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button type="button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+            <a href="{{ url_for('history') }}" class="button">History</a>
+        </div>
+        <h1>Kazakh Question Answering Model</h1>
+        <form id="qa-form" method="post">
+            <div>
+                <label for="context">Context (Казакша):</label>
+                <textarea id="context" name="context" rows="12" cols="80">{{ context }}</textarea>
+            </div>
+            <div>
+                <label for="question">Question (Казакша):</label>
+                <textarea id="question" name="question" rows="3" cols="80">{{ question }}</textarea>
+            </div>
+            <div>
+                <button type="submit">Get Answer</button>
+            </div>
+        </form>
+        {% if answer %}
+        <h2>Answer:</h2>
+        <p>{{ answer }}</p>
+        <h2>Highlighted Context:</h2>
+        <p id="context-display">{{ highlighted_context | safe }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

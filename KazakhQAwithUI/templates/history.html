@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Query History</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <script>
+      function toggleDarkMode() {
+        const isDarkMode = document.body.classList.toggle("dark-mode");
+        document
+          .querySelectorAll(".container, textarea, button, h2, p, a")
+          .forEach((el) => el.classList.toggle("dark-mode"));
+        localStorage.setItem("dark-mode", isDarkMode);
+      }
+
+      function loadDarkMode() {
+        const isDarkMode = localStorage.getItem("dark-mode") === "true";
+        if (isDarkMode) {
+          document.body.classList.add("dark-mode");
+          document
+            .querySelectorAll(".container, textarea, button, h2, p, a")
+            .forEach((el) => el.classList.add("dark-mode"));
+        }
+      }
+
+      window.onload = loadDarkMode;
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <button type="button" onclick="toggleDarkMode()">
+          Toggle Dark Mode
+        </button>
+        <a href="{{ url_for('home') }}" class="button">Home</a>
+      </div>
+      <h1>Query History</h1>
+      {% for entry in history %}
+      <div class="query">
+        <pre>{{ entry }}</pre>
+        <hr />
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>
